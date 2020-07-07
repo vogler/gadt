@@ -42,3 +42,16 @@ module GADT2 = struct
 
   let head_opt : type a. (a*_) t -> a option = function x::_ -> Some x | [] -> None
 end
+
+module GADT3 = struct
+  (* https://discuss.ocaml.org/t/in-pattern-matching/2676/2 *)
+  (* this has the nicest most readable type for t1 (the one in GADT2 has parens around every tuple). *)
+  type empty = |
+  type _ hlist = []: empty hlist | (::): 'a * 'b hlist -> ('a->'b) hlist
+
+  let t1 = [1; "a"]
+
+  let hd (type a b): (a -> b) hlist -> a = fun (a :: _) -> a
+
+  let x = hd t1
+end
